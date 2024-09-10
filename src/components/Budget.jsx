@@ -4,9 +4,10 @@ import BudgetSummary from './BudgetSummary';
 import TransactionList from './TransactionList';
 import LoginForm from './LoginForm';
 import CsvHandler from './CsvHandler';
-import { fetchBudgetData } from '../services/rocketMoneyApi';
+import { retryFetchBudgetData } from '../services/rocketMoneyApi';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Budget = () => {
   const [credentials, setCredentials] = useState(null);
@@ -15,13 +16,14 @@ const Budget = () => {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['budgetData', credentials],
-    queryFn: () => fetchBudgetData(credentials.username, credentials.password),
+    queryFn: () => retryFetchBudgetData(credentials.username, credentials.password),
     enabled: !!credentials,
     onSuccess: (data) => setBudgetData(data),
     onError: (error) => {
       setLoginError(error.message);
       setCredentials(null);
     },
+    retry: false,
   });
 
   const handleLogin = (username, password) => {
@@ -40,6 +42,11 @@ const Budget = () => {
       })),
     };
     setBudgetData(newBudgetData);
+  };
+
+  const handleRetry = () => {
+    setLoginError(null);
+    refetch();
   };
 
   if (!credentials) {
@@ -63,7 +70,12 @@ const Budget = () => {
     <Alert variant="destructive" className="max-w-md mx-auto mt-8">
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>Error</AlertTitle>
-      <AlertDescription>Failed to fetch budget data: {error.message}</AlertDescription>
+      <AlertDescription>
+        {error.message}
+        <Button onClick={handleRetry} className="mt-2 w-full">
+          Retry
+        </Button>
+      </AlertDescription>
     </Alert>
   );
 

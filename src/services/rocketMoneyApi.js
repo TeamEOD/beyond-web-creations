@@ -53,13 +53,31 @@ export const fetchBudgetData = async (username, password) => {
       transactions,
     };
   } catch (error) {
+    console.error('Error fetching budget data:', error);
     if (error.response) {
       if (error.response.status === 401) {
         throw new Error('Session expired. Please log in again');
       } else if (error.response.status === 403) {
         throw new Error('Access denied. Please check your account permissions');
+      } else if (error.response.status === 404) {
+        throw new Error('Budget data not found. Please ensure your account is set up correctly');
+      } else if (error.response.status >= 500) {
+        throw new Error('Server error. Please try again later');
       }
+    } else if (error.request) {
+      throw new Error('Network error. Please check your internet connection');
     }
     throw new Error('Failed to fetch budget data. Please try again later');
+  }
+};
+
+export const retryFetchBudgetData = async (username, password, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fetchBudgetData(username, password);
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
   }
 };
