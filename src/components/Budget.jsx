@@ -11,14 +11,12 @@ import { Button } from "@/components/ui/button";
 
 const Budget = () => {
   const [credentials, setCredentials] = useState(null);
-  const [budgetData, setBudgetData] = useState(null);
   const [loginError, setLoginError] = useState(null);
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data: budgetData, isLoading, error, refetch } = useQuery({
     queryKey: ['budgetData', credentials],
-    queryFn: () => retryFetchBudgetData(credentials.username, credentials.password),
+    queryFn: () => retryFetchBudgetData(credentials?.username, credentials?.password),
     enabled: !!credentials,
-    onSuccess: (data) => setBudgetData(data),
     onError: (error) => {
       setLoginError(error.message);
       setCredentials(null);
@@ -33,15 +31,8 @@ const Budget = () => {
   };
 
   const handleCsvImport = (importedData) => {
-    const newBudgetData = {
-      ...budgetData,
-      transactions: importedData.slice(1).map((row, index) => ({
-        id: index,
-        description: row[0],
-        amount: parseFloat(row[1]),
-      })),
-    };
-    setBudgetData(newBudgetData);
+    // This function should be implemented to handle CSV import
+    console.log('CSV import functionality not implemented yet', importedData);
   };
 
   const handleRetry = () => {
@@ -66,6 +57,7 @@ const Budget = () => {
   }
 
   if (isLoading) return <div className="text-center">Loading budget data...</div>;
+  
   if (error) return (
     <Alert variant="destructive" className="max-w-md mx-auto mt-8">
       <AlertCircle className="h-4 w-4" />
@@ -78,6 +70,8 @@ const Budget = () => {
       </AlertDescription>
     </Alert>
   );
+
+  if (!budgetData) return <div className="text-center">No budget data available.</div>;
 
   return (
     <div className="space-y-8">
@@ -93,12 +87,12 @@ const Budget = () => {
         onImport={handleCsvImport} 
         data={[
           ['Description', 'Amount'],
-          ...budgetData.transactions.map(t => [t.description, t.amount.toString()])
+          ...(budgetData.transactions || []).map(t => [t.description, t.amount.toString()])
         ]} 
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <BudgetSummary data={budgetData} />
-        <TransactionList transactions={budgetData.transactions} />
+        <TransactionList transactions={budgetData.transactions || []} />
       </div>
     </div>
   );
