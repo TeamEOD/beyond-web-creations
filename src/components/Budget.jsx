@@ -23,7 +23,7 @@ const Budget = () => {
     return (
       <div className="max-w-md mx-auto mt-8">
         <h2 className="text-2xl font-bold mb-4">Login to Rocket Money</h2>
-        <LoginForm onLogin={handleLogin} />
+        <LoginForm onLogin={handleLogin} defaultUsername="your_username" defaultPassword="your_password" />
       </div>
     );
   }

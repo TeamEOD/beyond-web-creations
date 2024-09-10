@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const LoginForm = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginForm = ({ onLogin, defaultUsername = "", defaultPassword = "" }) => {
+  const [username, setUsername] = useState(defaultUsername);
+  const [password, setPassword] = useState(defaultPassword);
 
   const handleSubmit = (e) => {
     e.preventDefault();
