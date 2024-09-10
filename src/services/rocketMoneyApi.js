@@ -15,8 +15,14 @@ const login = async (username, password) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return token;
   } catch (error) {
-    console.error('Login failed:', error);
-    throw error;
+    if (error.response) {
+      if (error.response.status === 401) {
+        throw new Error('Invalid username or password');
+      } else if (error.response.status === 403) {
+        throw new Error('Account locked. Please contact support');
+      }
+    }
+    throw new Error('Login failed. Please try again later');
   }
 };
 
@@ -47,7 +53,13 @@ export const fetchBudgetData = async (username, password) => {
       transactions,
     };
   } catch (error) {
-    console.error('Error fetching data from Rocket Money:', error);
-    throw error;
+    if (error.response) {
+      if (error.response.status === 401) {
+        throw new Error('Session expired. Please log in again');
+      } else if (error.response.status === 403) {
+        throw new Error('Access denied. Please check your account permissions');
+      }
+    }
+    throw new Error('Failed to fetch budget data. Please try again later');
   }
 };
