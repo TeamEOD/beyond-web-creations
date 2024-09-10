@@ -22,8 +22,8 @@ const Budget = () => {
   if (!credentials) {
     return (
       <div className="max-w-md mx-auto mt-8">
-        <h2 className="text-2xl font-bold mb-4">Login to Rocket Money</h2>
-        <LoginForm onLogin={handleLogin} defaultUsername="your_username" defaultPassword="your_password" />
+        <h2 className="text-2xl font-bold mb-4">Login to Your Budget</h2>
+        <LoginForm onLogin={handleLogin} defaultUsername="" defaultPassword="" />
       </div>
     );
   }
@@ -32,9 +32,19 @@ const Budget = () => {
   if (error) return <div className="text-center text-red-500">Error fetching budget data: {error.message}</div>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <BudgetSummary data={data} />
-      <TransactionList transactions={data.transactions} />
+    <div className="space-y-8">
+      <div className="text-right">
+        <button 
+          onClick={() => setCredentials(null)} 
+          className="text-blue-500 hover:text-blue-700"
+        >
+          Logout
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <BudgetSummary data={data} />
+        <TransactionList transactions={data.transactions} />
+      </div>
     </div>
   );
 };
