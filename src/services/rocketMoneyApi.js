@@ -1,14 +1,15 @@
 import axios from 'axios';
-import { API_BASE_URL, API_ENDPOINTS, IS_MOCK_API } from '../config/api';
+import { API_BASE_URL, API_ENDPOINTS, IS_MOCK_API, API_KEY } from '../config/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${API_KEY}`,
   },
 });
 
-// Mock data for demonstration
+// Mock data for demonstration (remove when using real API)
 const mockData = {
   balance: 5000,
   transactions: [
@@ -34,14 +35,7 @@ const login = async (username, password) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return token;
   } catch (error) {
-    if (error.response) {
-      if (error.response.status === 401) {
-        throw new Error('Invalid username or password');
-      } else if (error.response.status === 403) {
-        throw new Error('Account locked. Please contact support');
-      }
-    }
-    throw new Error('Login failed. Please try again later');
+    handleApiError(error, 'Login failed');
   }
 };
 
@@ -88,22 +82,31 @@ export const fetchBudgetData = async (username, password) => {
       transactions,
     };
   } catch (error) {
-    console.error('Error fetching budget data:', error);
-    if (error.response) {
-      if (error.response.status === 401) {
-        throw new Error('Session expired. Please log in again');
-      } else if (error.response.status === 403) {
-        throw new Error('Access denied. Please check your account permissions');
-      } else if (error.response.status === 404) {
-        throw new Error('Budget data not found. Please ensure your account is set up correctly');
-      } else if (error.response.status >= 500) {
-        throw new Error('Server error. Please try again later');
-      }
-    } else if (error.request) {
-      throw new Error('Network error. Please check your internet connection');
-    }
-    throw new Error('Failed to fetch budget data. Please try again later');
+    handleApiError(error, 'Failed to fetch budget data');
   }
+};
+
+const handleApiError = (error, defaultMessage) => {
+  console.error(`${defaultMessage}:`, error);
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        throw new Error('Invalid credentials or session expired. Please log in again.');
+      case 403:
+        throw new Error('Access denied. Please check your account permissions.');
+      case 404:
+        throw new Error('Requested data not found. Please ensure your account is set up correctly.');
+      case 429:
+        throw new Error('Too many requests. Please try again later.');
+      default:
+        if (error.response.status >= 500) {
+          throw new Error('Server error. Please try again later.');
+        }
+    }
+  } else if (error.request) {
+    throw new Error('Network error. Please check your internet connection.');
+  }
+  throw new Error(`${defaultMessage}. Please try again later.`);
 };
 
 export const retryFetchBudgetData = async (username, password, maxRetries = 3) => {
