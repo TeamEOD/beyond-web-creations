@@ -9,9 +9,9 @@ const BudgetSummary = ({ data }) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p>Current Balance: ${data.balance}</p>
-          <p>Total Income: ${data.income}</p>
-          <p>Total Expenses: ${data.expenses}</p>
+          <p>Current Balance: ${data.balance.toFixed(2)}</p>
+          <p>Total Income: ${data.income.toFixed(2)}</p>
+          <p>Total Expenses: ${data.expenses.toFixed(2)}</p>
         </div>
       </CardContent>
     </Card>
