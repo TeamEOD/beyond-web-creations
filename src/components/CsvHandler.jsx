@@ -24,10 +24,15 @@ const CsvHandler = ({ onImport, data, budgetSummary }) => {
       ['Total Expenses', budgetSummary.expenses],
       [],
       ['Transactions'],
-      ['Description', 'Amount']
+      ['Description', 'Amount', 'Date']
     ];
 
-    const transactionData = data.map(row => row);
+    const transactionData = data.map(transaction => [
+      transaction.description,
+      transaction.amount,
+      transaction.date || 'N/A'
+    ]);
+
     const csvContent = summaryData.concat(transactionData).map(row => row.join(',')).join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
