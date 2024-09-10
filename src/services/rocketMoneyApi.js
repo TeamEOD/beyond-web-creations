@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL, API_ENDPOINTS } from '../config/api';
+import { API_BASE_URL, API_ENDPOINTS, IS_MOCK_API } from '../config/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -8,7 +8,26 @@ const api = axios.create({
   },
 });
 
+// Mock data for demonstration
+const mockData = {
+  balance: 5000,
+  transactions: [
+    { id: 1, description: 'Salary', amount: 3000 },
+    { id: 2, description: 'Rent', amount: -1000 },
+    { id: 3, description: 'Groceries', amount: -200 },
+  ],
+};
+
 const login = async (username, password) => {
+  if (IS_MOCK_API) {
+    // Simulate login for mock API
+    if (username === 'demo' && password === 'password') {
+      return 'mock-token';
+    } else {
+      throw new Error('Invalid username or password');
+    }
+  }
+
   try {
     const response = await api.post(API_ENDPOINTS.LOGIN, { username, password });
     const { token } = response.data;
@@ -27,6 +46,22 @@ const login = async (username, password) => {
 };
 
 export const fetchBudgetData = async (username, password) => {
+  if (IS_MOCK_API) {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    if (username !== 'demo' || password !== 'password') {
+      throw new Error('Invalid credentials for mock API');
+    }
+
+    return {
+      balance: mockData.balance,
+      income: mockData.transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0),
+      expenses: mockData.transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(t.amount), 0),
+      transactions: mockData.transactions,
+    };
+  }
+
   try {
     await login(username, password);
 

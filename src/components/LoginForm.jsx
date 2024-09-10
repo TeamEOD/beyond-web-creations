@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
+import { IS_MOCK_API } from '../config/api';
 
 const LoginForm = ({ onLogin, defaultUsername = "", defaultPassword = "" }) => {
   const [username, setUsername] = useState(defaultUsername);
@@ -20,6 +21,12 @@ const LoginForm = ({ onLogin, defaultUsername = "", defaultPassword = "" }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {IS_MOCK_API && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+          <p className="font-bold">Demo Mode</p>
+          <p>Use username: 'demo' and password: 'password' to log in.</p>
+        </div>
+      )}
       <div>
         <Label htmlFor="username">Username</Label>
         <Input
