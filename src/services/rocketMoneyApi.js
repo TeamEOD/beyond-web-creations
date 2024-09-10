@@ -1,21 +1,32 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'https://api.rocketmoney.com'; // Replace with actual Rocket Money API URL
-const API_KEY = 'YOUR_ROCKET_MONEY_API_KEY'; // Replace with your actual API key
+import { API_BASE_URL, API_ENDPOINTS } from '../config/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Authorization': `Bearer ${API_KEY}`,
     'Content-Type': 'application/json',
   },
 });
 
-export const fetchBudgetData = async () => {
+const login = async (username, password) => {
   try {
+    const response = await api.post(API_ENDPOINTS.LOGIN, { username, password });
+    const { token } = response.data;
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return token;
+  } catch (error) {
+    console.error('Login failed:', error);
+    throw error;
+  }
+};
+
+export const fetchBudgetData = async (username, password) => {
+  try {
+    await login(username, password);
+
     const [balanceResponse, transactionsResponse] = await Promise.all([
-      api.get('/balance'),
-      api.get('/transactions'),
+      api.get(API_ENDPOINTS.BALANCE),
+      api.get(API_ENDPOINTS.TRANSACTIONS),
     ]);
 
     const balance = balanceResponse.data.balance;
