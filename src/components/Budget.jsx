@@ -31,7 +31,6 @@ const Budget = () => {
   };
 
   const handleCsvImport = (importedData) => {
-    // This function should be implemented to handle CSV import
     console.log('CSV import functionality not implemented yet', importedData);
   };
 

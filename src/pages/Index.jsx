@@ -40,10 +40,10 @@ const Index = () => {
         <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-blue-800">Personal Finance Manager</h1>
         <Tabs defaultValue="dashboard" className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8">
-            <TabsTrigger value="dashboard" className="text-sm md:text-lg">Dashboard</TabsTrigger>
-            <TabsTrigger value="budget" className="text-sm md:text-lg">Budget</TabsTrigger>
-            <TabsTrigger value="bills" className="text-sm md:text-lg">Bills</TabsTrigger>
-            <TabsTrigger value="investments" className="text-sm md:text-lg">Investments</TabsTrigger>
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="budget">Budget</TabsTrigger>
+            <TabsTrigger value="bills">Bills</TabsTrigger>
+            <TabsTrigger value="investments">Investments</TabsTrigger>
           </TabsList>
           <TabsContent value="dashboard">
             <Dashboard financialData={financialData} bills={bills} />
@@ -55,7 +55,11 @@ const Index = () => {
             <Bills bills={bills} />
           </TabsContent>
           <TabsContent value="investments">
-            <p className="text-center text-xl">Investments content coming soon...</p>
+            <div className="p-4 bg-white rounded-lg shadow">
+              <h2 className="text-2xl font-bold mb-4">Investments</h2>
+              <p className="text-lg">Total Investment: ${financialData.investmentTotal.toLocaleString()}</p>
+              <p className="mt-4">Detailed investment information and management tools coming soon...</p>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
