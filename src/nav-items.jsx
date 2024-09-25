@@ -3,7 +3,7 @@ import Index from "./pages/Index.jsx";
 
 export const navItems = [
   {
-    title: "Home",
+    title: "Dashboard",
     to: "/dashboard",
     icon: <HomeIcon className="h-4 w-4" />,
     page: <Index />,
