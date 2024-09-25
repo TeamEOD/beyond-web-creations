@@ -37,13 +37,13 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
       <NavBar />
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-blue-800">Personal Finance Manager</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-blue-800">Personal Finance Manager</h1>
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="dashboard" className="text-lg">Dashboard</TabsTrigger>
-            <TabsTrigger value="budget" className="text-lg">Budget</TabsTrigger>
-            <TabsTrigger value="bills" className="text-lg">Bills</TabsTrigger>
-            <TabsTrigger value="investments" className="text-lg">Investments</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8">
+            <TabsTrigger value="dashboard" className="text-sm md:text-lg">Dashboard</TabsTrigger>
+            <TabsTrigger value="budget" className="text-sm md:text-lg">Budget</TabsTrigger>
+            <TabsTrigger value="bills" className="text-sm md:text-lg">Bills</TabsTrigger>
+            <TabsTrigger value="investments" className="text-sm md:text-lg">Investments</TabsTrigger>
           </TabsList>
           <TabsContent value="dashboard">
             <Dashboard financialData={financialData} bills={bills} />
