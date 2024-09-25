@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import { Menu, X } from 'lucide-react';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="bg-gray-800 text-white p-4">
@@ -20,8 +25,8 @@ const NavBar = () => {
             <li key={item.to} className="mb-2 md:mb-0">
               <Link 
                 to={item.to} 
-                className="hover:text-gray-300 flex items-center"
-                onClick={() => setIsMenuOpen(false)}
+                className={`hover:text-gray-300 flex items-center ${location.pathname === item.to ? 'text-blue-400' : ''}`}
+                onClick={closeMenu}
               >
                 {item.icon}
                 <span className="ml-1">{item.title}</span>
