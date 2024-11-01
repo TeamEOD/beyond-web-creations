@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Budget from '../components/Budget';
 import Bills from '../components/Bills';
 import Dashboard from '../components/Dashboard';
-import NavBar from '../components/NavBar';
 
 const Index = () => {
   const [bills] = useState([
@@ -35,7 +34,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
-      <NavBar />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-blue-800">Personal Finance Manager</h1>
         <Tabs defaultValue="dashboard" className="w-full">
